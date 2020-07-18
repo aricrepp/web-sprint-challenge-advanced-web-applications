@@ -1,25 +1,26 @@
-import React from 'react';
+import React, { useState } from 'react';
+import axios from 'axios';
 
-const Login = () => {
+const Login = (props) => {
   // make a post request to retrieve a token from the api
   // when you have handled the token, navigate to the BubblePage route
 
+  const [credentials, setCredentials] = useState({
+    username: '',
+    password: '',
+  });
+
   const handleChange = (e) => {
-    this.setState({
-      credentials: {
-        ...this.state.credentials,
-        [e.target.name]: e.target.value,
-      },
-    });
+    setCredentials({ ...credentials, [e.target.name]: e.target.value });
   };
 
   const login = (e) => {
     e.preventDefault();
     axios
-      .post('http://localhost:5000/api/login', this.state.credentials)
+      .post('http://localhost:5000/api/login', credentials)
       .then((res) => {
         localStorage.setItem('token', res.data.payload);
-        this.props.history.push('/protected');
+        props.history.push('/protected');
       })
       .catch((err) => console.log({ err }));
   };
@@ -33,14 +34,14 @@ const Login = () => {
             className="login_input"
             type="text"
             name="username"
-            value={this.state.credentials.username}
+            value={credentials.username}
             onChange={handleChange}
           />
           <input
             className="login_input"
             type="password"
             name="password"
-            value={this.state.credentials.password}
+            value={credentials.password}
             onChange={handleChange}
           />
           <button>Log in</button>
